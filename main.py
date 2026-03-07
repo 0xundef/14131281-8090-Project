@@ -6,7 +6,7 @@ import yaml
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from application import Application
-from screen_knocker import ScreenKnocker
+from screen_locker import ScreenLocker
 from input_monitor import InputMonitor
 
 def load_config():
@@ -28,7 +28,7 @@ def main():
     print(f"Configuration loaded: {config.get('app_name', 'Unknown App')}")
     
     # Initialize components with config
-    knocker = ScreenKnocker(config)
+    locker = ScreenLocker(config)
     
     # Start Input Monitor
     input_monitor = InputMonitor()

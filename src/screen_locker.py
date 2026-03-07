@@ -4,7 +4,7 @@ import ctypes
 import sys
 import subprocess
 
-class ScreenKnocker:
+class ScreenLocker:
     def __init__(self, config=None):
         self.platform = platform.system()
         self.config = config or {}
@@ -43,5 +43,5 @@ class ScreenKnocker:
             print(f"Failed to lock macOS screen: {e}")
 
 if __name__ == "__main__":
-    knocker = ScreenKnocker()
-    knocker.lock_screen()
+    locker = ScreenLocker()
+    locker.lock_screen()
