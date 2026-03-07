@@ -5,8 +5,9 @@ import sys
 import subprocess
 
 class ScreenKnocker:
-    def __init__(self):
+    def __init__(self, config=None):
         self.platform = platform.system()
+        self.config = config or {}
     
     def lock_screen(self):
         """Locks the screen based on the operating system."""

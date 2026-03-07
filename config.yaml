@@ -1,0 +1,5 @@
+app_name: "Relax Your Eyes"
+version: "1.0.0"
+lock_screen:
+  enabled: true
+  timeout_seconds: 300

@@ -2,7 +2,8 @@ import tkinter as tk
 import os
 
 class Application:
-    def __init__(self):
+    def __init__(self, config=None):
+        self.config = config or {}
         # Silencing Tkinter deprecation warning on macOS
         if os.name == 'posix':
             os.environ['TK_SILENCE_DEPRECATION'] = '1'
