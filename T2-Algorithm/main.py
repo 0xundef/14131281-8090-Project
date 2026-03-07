@@ -1,70 +1,82 @@
-from collections import deque
+import sys
+import os
 
-class LimitedGraph:
-    def __init__(self, num_nodes):
-        self.num_nodes = num_nodes
-        self.graph = []
-        # Initialize adjacency matrix with 0s
-        for _ in range(num_nodes):
-            self.graph.append([0] * num_nodes)
+# Add current directory to path so imports work
+sys.path.append(os.path.dirname(__file__))
 
-    def add_edge(self, u, v):
-        if 0 <= u < self.num_nodes and 0 <= v < self.num_nodes:
-            self.graph[u][v] = 1
-            self.graph[v][u] = 1  # Undirected graph
-        else:
-            print(f"Error: Nodes {u} and {v} must be between 0 and {self.num_nodes - 1}")
-
-    def bfs(self, start_node):
-        if not (0 <= start_node < self.num_nodes):
-            print(f"Error: Start node {start_node} is out of bounds")
-            return []
-
-        visited = set()
-        queue = deque([start_node])
-        visited.add(start_node)
-        traversal_order = []
-
-        while queue:
-            vertex = queue.popleft()
-            traversal_order.append(vertex)
-
-            # Check neighbors in adjacency matrix
-            for neighbor in range(self.num_nodes):
-                if self.graph[vertex][neighbor] == 1:
-                    if neighbor not in visited:
-                        visited.add(neighbor)
-                        queue.append(neighbor)
-        
-        return traversal_order
+from graph import LimitedGraph
+from bfs import BreadthFirstSearch
 
 def main():
-    print("Starting Graph & BFS Algorithm Demo (Adjacency Matrix)...")
+    print("Starting Graph & BFS Algorithm Demo (Decoupled Structure)...")
     
-    num_nodes = 6
+    # 1. Initialize the Graph structure with fewer nodes for clarity
+    num_nodes = 12  # Simplified to 12 nodes (A-L)
     g = LimitedGraph(num_nodes)
     
-    # Map nodes to names for display
-    node_names = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F'}
+    # Map nodes to names for display (A, B, C, ..., L)
+    node_names = {i: chr(65 + i) for i in range(num_nodes)}
     
-    # Adding edges: A-B, A-C, B-D, B-E, C-F
-    # 0-1, 0-2, 1-3, 1-4, 2-5
-    g.add_edge(0, 1)
-    g.add_edge(0, 2)
-    g.add_edge(1, 3)
-    g.add_edge(1, 4)
-    g.add_edge(2, 5)
+    # Define a set of edges that clearly illustrates BFS pathfinding
+    # This structure provides multiple routes from A (0) to L (11) of varying lengths
+    edges = [
+        # Path 1: The "Long" Scenic Route (Top) - 5 steps
+        # A -> B -> C -> D -> E -> L
+        (0, 1), (1, 2), (2, 3), (3, 4), (4, 11),
+        
+        # Path 2: The "Medium" Route (Bottom) - 4 steps
+        # A -> F -> G -> H -> L
+        (0, 5), (5, 6), (6, 7), (7, 11),
+        
+        # Path 3: The "Shortest" Path (Middle) - 3 steps
+        # A -> I -> J -> L
+        (0, 8), (8, 9), (9, 11),
+        
+        # Cross-links to add complexity and cycles
+        # B -> F (Connects Top to Bottom early)
+        (1, 5),
+        # C -> G (Connects Top to Bottom middle)
+        (2, 6),
+        # D -> H (Connects Top to Bottom late)
+        (3, 7),
+        # I -> G (Connects Shortest to Medium)
+        (8, 6),
+        # J -> E (Connects Shortest to Long end)
+        (9, 4)
+    ]
     
-    print("\nAdjacency Matrix:")
+    # Add all edges to the graph
+    for u, v in edges:
+        g.add_edge(u, v)
+    
+    print("\nAdjacency Matrix (Partial View):")
     for row in g.graph:
-        print(row)
-
-    start_node = 0
-    print(f"\nStarting BFS from node {start_node} ({node_names[start_node]})...")
-    result = g.bfs(start_node)
+        print(str(row) + " ...") # Print rows
     
-    result_names = [node_names[n] for n in result]
-    print("BFS Traversal Order:", " -> ".join(result_names))
+    # 2. Initialize the Algorithm with the Graph
+    bfs_algo = BreadthFirstSearch(g)
+    
+    start_node = 0  # A
+    end_node = 11   # L (Target node)
+    
+    print(f"\nFinding shortest path from {node_names[start_node]} to {node_names[end_node]}...")
+    
+    # 3. Execute the algorithm to find shortest path
+    path = bfs_algo.find_shortest_path(start_node, end_node)
+    
+    if path:
+        path_names = [node_names[n] for n in path]
+        print("Shortest Path Found:", " -> ".join(path_names))
+        print(f"Path Length: {len(path) - 1} steps")
+    else:
+        print("No path found.")
+
+    # 4. Visualize the graph with the highlighted path
+    print("\nVisualizing graph with highlighted path...")
+    try:
+        g.draw(path=path)
+    except Exception as e:
+        print(f"Could not visualize graph: {e}")
 
 if __name__ == "__main__":
     main()
