@@ -12,5 +12,5 @@ This application monitors eye fatigue by tracking user activity (keyboard and mo
 Run the application from the project root:
 
 ```bash
-python3 src/T1-RelaxYourEyes/main.py
+python3 T1-RelaxYourEyes/main.py
 ```

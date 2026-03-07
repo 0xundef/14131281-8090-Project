@@ -19,5 +19,5 @@ A graph traversal algorithm that explores all neighbor nodes at the present dept
 Run the application:
 
 ```bash
-python3 src/T2-Algorithm/main.py
+python3 T2-Algorithm/main.py
 ```

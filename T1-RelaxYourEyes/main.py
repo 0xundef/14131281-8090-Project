@@ -10,8 +10,8 @@ from screen_locker import ScreenLocker
 from input_monitor import InputMonitor
 
 def load_config():
-    # Look for config.yaml in project root (2 levels up)
-    config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config.yaml')
+    # Look for config.yaml in project root (1 level up)
+    config_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
     try:
         with open(config_path, 'r') as file:
             return yaml.safe_load(file)
