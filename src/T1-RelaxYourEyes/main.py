@@ -2,16 +2,18 @@ import sys
 import os
 import yaml
 
-# Ensure src directory is in python path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+# Add current directory to path so imports work
+sys.path.append(os.path.dirname(__file__))
 
 from application import Application
 from screen_locker import ScreenLocker
 from input_monitor import InputMonitor
 
 def load_config():
+    # Look for config.yaml in project root (2 levels up)
+    config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config.yaml')
     try:
-        with open('config.yaml', 'r') as file:
+        with open(config_path, 'r') as file:
             return yaml.safe_load(file)
     except FileNotFoundError:
         print("Config file not found. Using empty config.")
@@ -41,7 +43,6 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        # Stop input monitor when app exits
         input_monitor.stop()
 
 if __name__ == "__main__":
