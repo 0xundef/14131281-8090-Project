@@ -7,6 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from application import Application
 from screen_knocker import ScreenKnocker
+from input_monitor import InputMonitor
 
 def load_config():
     try:
@@ -29,9 +30,19 @@ def main():
     # Initialize components with config
     knocker = ScreenKnocker(config)
     
+    # Start Input Monitor
+    input_monitor = InputMonitor()
+    input_monitor.start()
+    
     # Start UI Application with config
-    app = Application(config)
-    app.run()
+    try:
+        app = Application(config)
+        app.run()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # Stop input monitor when app exits
+        input_monitor.stop()
 
 if __name__ == "__main__":
     main()
