@@ -4,8 +4,9 @@ lock_screen:
   enabled: true
   timeout_seconds: 300
 usage_monitor:
-  max_continuous_usage_seconds: 120 # 20 minutes
+  max_continuous_usage_seconds: 120 # 2 minutes
   idle_threshold_seconds: 60 # 1 minute break resets the timer
+  warning_duration_seconds: 10 # Countdown before locking
 
 logging:
   level: "INFO"
