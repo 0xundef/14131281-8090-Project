@@ -1,71 +1,65 @@
 import time
-import threading
 from pynput import mouse, keyboard
-import platform
+import threading
 
 class InputMonitor:
-    def __init__(self):
+    def __init__(self, idle_threshold=60):
+        self.idle_threshold = idle_threshold
         self.last_activity_time = time.time()
-        self._running = False
-        self.mouse_listener = None
-        self.keyboard_listener = None
+        self.usage_start_time = time.time()
+        self.running = False
         
-        # Sampling for mouse move
-        self.last_mouse_log_time = 0
-        self.mouse_log_interval = 0.5 # Log mouse move at most every 0.5s
+        # Listeners
+        self.mouse_listener = mouse.Listener(
+            on_move=self._on_activity,
+            on_click=self._on_activity,
+            on_scroll=self._on_activity
+        )
+        self.keyboard_listener = keyboard.Listener(
+            on_press=self._on_activity,
+            on_release=self._on_activity
+        )
+
+    def _on_activity(self, *args):
+        now = time.time()
+        # If user was idle for too long, reset the session start time
+        if now - self.last_activity_time > self.idle_threshold:
+            # We don't print here to avoid spamming logs on first activity after break
+            # But debugging might be useful. Let's keep it minimal.
+            # print(f"User returned from break > {self.idle_threshold}s. Resetting usage timer.")
+            self.usage_start_time = now
+        
+        self.last_activity_time = now
 
     def start(self):
-        if self._running:
-            return
-        
-        self._running = True
-        
-        # Setup listeners
-        self.mouse_listener = mouse.Listener(
-            on_move=self._on_move,
-            on_click=self._on_click,
-            on_scroll=self._on_scroll)
-        
-        self.keyboard_listener = keyboard.Listener(
-            on_press=self._on_press)
-            
-        self.mouse_listener.start()
-        self.keyboard_listener.start()
-        
-        print(f"Input monitoring started using pynput on {platform.system()}.")
+        if not self.running:
+            self.running = True
+            # Listeners start their own threads
+            self.mouse_listener.start()
+            self.keyboard_listener.start()
+            print("Input monitoring started.")
 
     def stop(self):
-        self._running = False
-        if self.mouse_listener:
+        if self.running:
+            self.running = False
             self.mouse_listener.stop()
-        if self.keyboard_listener:
             self.keyboard_listener.stop()
-        print("Input monitoring stopped.")
+            print("Input monitoring stopped.")
 
-    def get_last_activity_time(self):
-        return self.last_activity_time
-
-    def _on_move(self, x, y):
-        self.last_activity_time = time.time()
+    def get_continuous_usage_duration(self):
+        """
+        Returns the duration of continuous usage in seconds.
+        If user is currently idle (no activity for > idle_threshold), returns 0.
+        """
         now = time.time()
-        if now - self.last_mouse_log_time > self.mouse_log_interval:
-            print(f"Mouse moved to ({x}, {y}) [Sampled]")
-            self.last_mouse_log_time = now
+        # If currently idle, the session is technically broken/paused
+        if now - self.last_activity_time > self.idle_threshold:
+            return 0
+        return now - self.usage_start_time
 
-    def _on_click(self, x, y, button, pressed):
-        self.last_activity_time = time.time()
-        if pressed:
-            print(f"Mouse clicked at ({x}, {y}) with {button}")
-
-    def _on_scroll(self, x, y, dx, dy):
-        self.last_activity_time = time.time()
-        print(f"Mouse scrolled at ({x}, {y})")
-
-    def _on_press(self, key): 
-        self.last_activity_time = time.time()
-        try:
-            print(f"Keyboard event: '{key.char}' pressed")
-        except AttributeError:
-            print(f"Keyboard event: {key} pressed")
-
-
+    def reset_usage(self):
+        """Resets the continuous usage timer manually."""
+        print("Usage timer reset manually.")
+        now = time.time()
+        self.usage_start_time = now
+        self.last_activity_time = now

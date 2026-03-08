@@ -3,3 +3,9 @@ version: "1.0.0"
 lock_screen:
   enabled: true
   timeout_seconds: 300
+usage_monitor:
+  max_continuous_usage_seconds: 120 # 20 minutes
+  idle_threshold_seconds: 60 # 1 minute break resets the timer
+
+logging:
+  level: "INFO"

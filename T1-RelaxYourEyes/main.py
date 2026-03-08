@@ -2,6 +2,9 @@ import sys
 import os
 import yaml
 
+# Suppress Tkinter deprecation warning on macOS
+os.environ['TK_SILENCE_DEPRECATION'] = '1'
+
 # Add current directory to path so imports work
 sys.path.append(os.path.dirname(__file__))
 
@@ -33,12 +36,14 @@ def main():
     locker = ScreenLocker(config)
     
     # Start Input Monitor
-    input_monitor = InputMonitor()
+    # Get idle threshold from config (default 60s)
+    idle_threshold = config.get('usage_monitor', {}).get('idle_threshold_seconds', 60)
+    input_monitor = InputMonitor(idle_threshold=idle_threshold)
     input_monitor.start()
     
-    # Start UI Application with config
+    # Start UI Application with config and dependencies
     try:
-        app = Application(config)
+        app = Application(config, input_monitor=input_monitor, screen_locker=locker)
         app.run()
     except KeyboardInterrupt:
         pass
