@@ -1,10 +1,5 @@
-try:
-    import networkx as nx
-    import matplotlib.pyplot as plt
-    HAS_VISUALIZATION = True
-except ImportError:
-    HAS_VISUALIZATION = False
-    print("Warning: networkx or matplotlib not found. Graph visualization disabled.")
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class LimitedGraph:
     def __init__(self, num_nodes):
@@ -27,10 +22,6 @@ class LimitedGraph:
         Reads the adjacency matrix to build the graph structure.
         Optionally highlights a path if provided.
         """
-        if not HAS_VISUALIZATION:
-            print("Visualization libraries not installed.")
-            return
-
         G = nx.Graph()
         
         # Add nodes
