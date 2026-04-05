@@ -26,7 +26,7 @@ class InputMonitor:
         if now - self.last_activity_time > self.idle_threshold:
             # We don't print here to avoid spamming logs on first activity after break
             # But debugging might be useful. Let's keep it minimal.
-            # print(f"User returned from break > {self.idle_threshold}s. Resetting usage timer.")
+            print(f"User returned from break > {self.idle_threshold}s. Resetting usage timer.")
             self.usage_start_time = now
         
         self.last_activity_time = now

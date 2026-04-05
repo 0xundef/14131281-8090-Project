@@ -1,6 +1,7 @@
 import sys
 import os
 import yaml
+import logging
 
 # Suppress Tkinter deprecation warning on macOS
 os.environ['TK_SILENCE_DEPRECATION'] = '1'
@@ -31,6 +32,12 @@ def main():
     # Load configuration
     config = load_config()
     print(f"Configuration loaded: {config.get('app_name', 'Unknown App')}")
+
+    level_name = (config.get("logging") or {}).get("level", "INFO")
+    logging.basicConfig(
+        level=getattr(logging, str(level_name).upper(), logging.INFO),
+        format="%(asctime)s %(levelname)s %(message)s",
+    )
     
     # Initialize components with config
     locker = ScreenLocker(config)

@@ -1,12 +1,14 @@
 import tkinter as tk
 import time
 import os
+import logging
 
 class Application:
     def __init__(self, config=None, input_monitor=None, screen_locker=None):
         self.config = config or {}
         self.input_monitor = input_monitor
         self.screen_locker = screen_locker
+        self.logger = logging.getLogger("RelaxYourEyes")
         
         # Get usage thresholds from config
         self.max_usage_seconds = self.config.get('usage_monitor', {}).get('max_continuous_usage_seconds', 1200)
@@ -21,12 +23,8 @@ class Application:
         main_frame.pack(expand=True, fill="both")
         
         # Status Label
-        self.status_label = tk.Label(main_frame, text="Monitoring usage...", font=("Helvetica", 14))
-        self.status_label.pack(pady=10)
-        
-        # Timer Label
-        self.timer_label = tk.Label(main_frame, text="Continuous Usage: 0m 0s", font=("Helvetica", 18, "bold"))
-        self.timer_label.pack(pady=10)
+        # self.status_label = tk.Label(main_frame, text="Monitoring usage...", font=("Helvetica", 14))
+        # self.status_label.pack(pady=10)
         
         # Info Label
         threshold_mins = self.max_usage_seconds // 60
@@ -35,8 +33,8 @@ class Application:
         self.info_label.pack(pady=5)
         
         # Reset Button (Optional, for testing)
-        self.reset_btn = tk.Button(main_frame, text="Reset Timer", command=self.reset_timer)
-        self.reset_btn.pack(pady=10)
+        # self.reset_btn = tk.Button(main_frame, text="Reset Timer", command=self.reset_timer)
+        # self.reset_btn.pack(pady=10)
 
         # Flag to prevent multiple warnings
         self.is_warning = False
@@ -133,7 +131,7 @@ class Application:
             print("Max continuous usage exceeded. Locking screen.")
             self.screen_locker.lock_screen()
             # Reset the usage timer after locking
-            self.input_monitor.reset_usage()
+            # self.input_monitor.reset_usage()
         
         # Reset UI status
         self.status_label.config(text="Monitoring usage...", fg="black")
@@ -149,10 +147,7 @@ class Application:
         if self.input_monitor:
             duration = self.input_monitor.get_continuous_usage_duration()
             
-            # Update UI
-            minutes = int(duration // 60)
-            seconds = int(duration % 60)
-            self.timer_label.config(text=f"{minutes}m {seconds}s")
+            self.logger.info("continuous_usage_seconds=%.1f", duration)
             
             # Check threshold
             if duration > self.max_usage_seconds:
