@@ -6,15 +6,15 @@ An application that monitors eye fatigue and sends notifications to remind you t
 For more details, please see the [Task 1 README](T1-RelaxYourEyes/README.md).
 
 ## Task2: Algorithm
-Self-study and research regarding graph data structures and traversal algorithms.
+Self-study and implementation of selected data structures and algorithms.
 
 ### Key Components
-1. **Data Structure: Graph**
-   - Implemented using an adjacency list.
-   - Supports adding edges between nodes.
+1. **Data Structure: Skip List**
+   - Probabilistic ordered structure with layered linked lists.
+   - Supports efficient average-case search, insertion, and deletion.
 
-2. **Algorithm: Breadth-First Search (BFS)**
-   - Traverses the graph level by level.
-   - Useful for finding shortest paths in unweighted graphs.
+2. **Algorithm: Shell Sort**
+   - Gap-based improvement over insertion sort.
+   - Performs in-place sorting by comparing distant elements first.
 
 For more detailed information and implementation specifics, please refer to the [Task 2 README](T2-Algorithm/README.md).

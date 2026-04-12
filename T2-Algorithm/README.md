@@ -1,26 +1,36 @@
-# T2: Algorithm Study - Graph & BFS
+# T2: Algorithm Study - Self-Study Extension
 
-This project focuses on the study and implementation of the **Graph** data structure and the **Breadth-First Search (BFS)** algorithm.
+This project focuses on self-study implementations of data structures and algorithms.
+
+Included in this project:
+- **Skip List** data structure (probabilistic ordered structure)
+- **Shell Sort** algorithm (gap-based insertion sort)
 
 ## Key Concepts
 
-### 1. Data Structure: Graph (Adjacency Matrix Implementation)
-A non-linear data structure consisting of nodes (vertices) and edges.
-In this implementation (`LimitedGraph`), we use an **Adjacency Matrix** to represent the graph:
-- A 2D array where `matrix[i][j] = 1` indicates an edge between node `i` and node `j`.
-- Suitable for dense graphs where the number of edges is close to the square of the number of nodes.
+### 1. Data Structure: Skip List
+An ordered probabilistic data structure that supports average-case `O(log n)` search, insertion, and deletion by maintaining multiple levels of linked lists.
 
-### 2. Algorithm: Breadth-First Search (BFS)
-A graph traversal algorithm that explores all neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. It is commonly used for finding the shortest path in unweighted graphs.
+### 2. Algorithm: Shell Sort
+An in-place comparison sort that improves insertion sort by allowing exchanges of far-apart elements using a decreasing gap sequence.
 
 ## Structure
 
-- `main.py`: Implementation of `LimitedGraph` (using Adjacency Matrix) and BFS traversal.
+- `skip_list.py`: Skip List implementation (ordered set)
+- `skip_list_demo.py`: Skip List demo
+- `shell_sort.py`: Shell Sort implementation
+- `shell_sort_demo.py`: Shell Sort demo
 
 ## Usage
 
-Run the application:
+### 1) Skip List demo
 
 ```bash
-python3 T2-Algorithm/main.py
+python3 T2-Algorithm/skip_list_demo.py
+```
+
+### 2) Shell Sort demo
+
+```bash
+python3 T2-Algorithm/shell_sort_demo.py
 ```

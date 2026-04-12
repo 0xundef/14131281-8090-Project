@@ -141,3 +141,5 @@ cython_debug/
 *.swo
 .DS_Store
 dev.md
+__pycache__
+report*
