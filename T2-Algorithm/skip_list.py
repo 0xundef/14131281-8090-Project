@@ -13,18 +13,16 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
-from typing import Generic, List, Optional, TypeVar
-
-T = TypeVar("T")
+from typing import List, Optional
 
 
 @dataclass
-class _Node(Generic[T]):
-    key: T
-    forward: List[Optional["_Node[T]"]]  # forward pointers for each level
+class _Node:
+    key: int
+    forward: List[Optional["_Node"]]  # forward pointers for each level
 
 
-class SkipList(Generic[T]):
+class SkipList:
     def __init__(self, max_level: int = 16, p: float = 0.5, seed: int = 42) -> None:
         if max_level <= 0:
             raise ValueError("max_level must be positive")
@@ -36,7 +34,7 @@ class SkipList(Generic[T]):
         self._rand = random.Random(seed)
 
         # Header uses a sentinel key; it won't be compared in traversal (we start from header)
-        self.header: _Node[T] = _Node(key=None, forward=[None] * max_level)  # type: ignore[arg-type]
+        self.header = _Node(key=0, forward=[None] * max_level)
         self.level = 1  # current highest level (1..max_level)
         self.size = 0
 
@@ -49,7 +47,7 @@ class SkipList(Generic[T]):
             lvl += 1
         return lvl
 
-    def search(self, key: T) -> bool:
+    def search(self, key: int) -> bool:
         cur = self.header
         # Traverse from top level down
         for i in reversed(range(self.level)):
@@ -58,12 +56,12 @@ class SkipList(Generic[T]):
         cur = cur.forward[0] if cur.forward[0] is not None else None
         return cur is not None and cur.key == key
 
-    def insert(self, key: T) -> bool:
+    def insert(self, key: int) -> bool:
         """
         Insert a key into the skip list.
         Returns True if inserted, False if key already exists.
         """
-        update: List[_Node[T]] = [self.header] * self.max_level
+        update: List[_Node] = [self.header] * self.max_level
         cur = self.header
 
         for i in reversed(range(self.level)):
@@ -90,12 +88,12 @@ class SkipList(Generic[T]):
         self.size += 1
         return True
 
-    def delete(self, key: T) -> bool:
+    def delete(self, key: int) -> bool:
         """
         Delete key if present.
         Returns True if deleted; False if not found.
         """
-        update: List[_Node[T]] = [self.header] * self.max_level
+        update: List[_Node] = [self.header] * self.max_level
         cur = self.header
 
         for i in reversed(range(self.level)):
@@ -120,15 +118,15 @@ class SkipList(Generic[T]):
         self.size -= 1
         return True
 
-    def to_levels(self) -> List[List[T]]:
+    def to_levels(self) -> List[List[int]]:
         """
         Return a list of levels for visualization:
         levels[0] is the bottom level; levels[level-1] is the current top.
         """
-        levels: List[List[T]] = []
+        levels: List[List[int]] = []
         for i in range(self.level):
             cur = self.header.forward[i]
-            row: List[T] = []
+            row: List[int] = []
             while cur is not None:
                 row.append(cur.key)
                 cur = cur.forward[i] if i < len(cur.forward) else None
@@ -138,7 +136,7 @@ class SkipList(Generic[T]):
 
 def _demo() -> None:
     print("SkipList demo (ordered set)")
-    sl = SkipList[int](max_level=8, p=0.5, seed=42)
+    sl = SkipList(max_level=8, p=0.5, seed=42)
     for x in [7, 3, 9, 1, 5, 8, 2]:
         sl.insert(x)
 
@@ -157,4 +155,3 @@ def _demo() -> None:
 
 if __name__ == "__main__":
     _demo()
-

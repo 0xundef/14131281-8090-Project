@@ -9,7 +9,7 @@ from skip_list import SkipList
 
 def main():
     print("Starting Skip List demo...")
-    sl = SkipList[int](max_level=8, p=0.5, seed=42)
+    sl = SkipList(max_level=8, p=0.5, seed=42)
 
     values = [7, 3, 9, 1, 5, 8, 2]
     print("Insert:", values)
@@ -30,4 +30,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
