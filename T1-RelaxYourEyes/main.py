@@ -10,7 +10,7 @@ os.environ['TK_SILENCE_DEPRECATION'] = '1'
 sys.path.append(os.path.dirname(__file__))
 
 from application import Application
-from screen_locker import ScreenLocker
+from screen_locker import create_screen_locker
 from input_monitor import InputMonitor
 
 def load_config():
@@ -40,7 +40,7 @@ def main():
     )
     
     # Initialize components with config
-    locker = ScreenLocker(config)
+    locker = create_screen_locker(config)
     
     # Start Input Monitor
     # Get idle threshold from config (default 60s)
