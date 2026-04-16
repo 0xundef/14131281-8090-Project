@@ -25,7 +25,7 @@ The `usage_monitor` section controls the core logic:
 ### Example `config.yaml`
 ```yaml
 usage_monitor:
-  max_continuous_usage_seconds: 1200 # 20 minutes working time
+  max_continuous_usage_seconds: 70  # one more minute working time, then trigger break
   idle_threshold_seconds: 60        # 1 minute break resets the timer
   warning_duration_seconds: 10      # 10s countdown before lock
 ```
@@ -37,12 +37,28 @@ usage_monitor:
 4.  **Locking**: The modal displays a countdown. When it reaches zero, the application triggers the **operating system's built-in lock screen** (e.g., Windows Lock or macOS Login Screen). We do not use a custom lock screen implementation; we rely on the secure, native OS capability to ensure privacy and security.
 
 ## Usage
-1.  Install dependencies:
+
+> [!CAUTION]
+> This project is currently tested on macOS only. Windows support is implemented, but not fully verified yet.
+  
+1.  Grant Input Monitoring permsission:
+    This permission allows `pynput` to listen to keyboard and mouse activity, so the app can measure continuous usage time correctly and trigger break warnings/lock when needed.
+
+    so if you want to run on VSCode, you need to grant "VSCode" permission first, cause I use "Terminal" to run the application, following showed how to grant the permission for "Terminal".
+
+    ![Grant Input Monitoring permsission](../images/grant-input-monitoring-permsission.png)
+2. prepare a virtual environment:
+    ```bash
+    git clone https://github.com/0xundef/14131281-8090-Project.git
+    cd 14131281-8090-Project
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+3.  Install dependencies:
     ```bash
     pip install -r requirements.txt
     ```
-
-2.  Run the application from the project root:
+4.  Run the application from the project root:
     ```bash
     python3 T1-RelaxYourEyes/main.py
     ```
