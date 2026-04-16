@@ -14,8 +14,10 @@ from screen_locker import create_screen_locker
 from input_monitor import InputMonitor
 
 def load_config():
-    # Look for config.yaml in project root (1 level up)
-    config_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
+    current_dir = os.path.dirname(__file__)
+    local_config_path = os.path.join(current_dir, "config.yaml")
+    legacy_config_path = os.path.join(current_dir, "..", "config.yaml")
+    config_path = local_config_path if os.path.exists(local_config_path) else legacy_config_path
     try:
         with open(config_path, 'r') as file:
             return yaml.safe_load(file)
